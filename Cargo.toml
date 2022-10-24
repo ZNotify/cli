@@ -1,0 +1,12 @@
+[package]
+name = "znotify-cli"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+clap = { version = "4.0.18", features = ["derive", "cargo"] }
+znotify = "0.0.2"
+
+[profile.release]
+lto = true
