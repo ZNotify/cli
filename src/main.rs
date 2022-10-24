@@ -1,5 +1,5 @@
-use clap::{Arg, Command, crate_authors, crate_version};
-use znotify::send as notify_send;
+use clap::{Command, crate_authors, crate_version};
+use tokio::runtime::Handle;
 
 mod send;
 
@@ -11,13 +11,10 @@ fn main() {
         .subcommand(send::send_command())
         .get_matches();
     match matches.subcommand() {
-        ("send", Some(sub_matches)) => {
-            let user_id = sub_matches.value_of("user_id").unwrap();
-            let title = sub_matches.value_of("title").unwrap();
-            let content = sub_matches.value_of("content").unwrap();
-            let long = sub_matches.value_of("long").unwrap();
-            notify_send(user_id, title, content, long);
-        }
+        Some(("send", sub_matches)) =>
+            {
+                Handle::current().block_on(send::send_action(sub_matches));
+            }
         _ => {}
     }
 }

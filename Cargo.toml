@@ -5,8 +5,9 @@ edition = "2021"
 
 
 [dependencies]
-clap = { version = "4.0.18", features = ["derive", "cargo"] }
-znotify = "0.0.2"
+clap = { version = "4.0.18", features = ["derive", "cargo", "std"] }
+tokio = "1.21.2"
+znotify = "0.0.3"
 
 [profile.release]
 lto = true
