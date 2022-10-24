@@ -9,7 +9,7 @@ fn main() {
         .display_name("ZNotify")
         .author(crate_authors!())
         .version(crate_version!())
-        .about("Send notification to yourself.")
+        .about("Send notification to ZNotify.")
         .arg_required_else_help(true)
         .subcommand(send::send_command())
         .get_matches();

@@ -24,7 +24,7 @@ pub(crate) fn send_command() -> Command {
         .required(true)
         .help("User ID to send notification");
     Command::new("send")
-        .about("Send notification to yourself")
+        .about("Send notification to ZNotify")
         .args(&[user_id_arg, title_arg, content_arg, long_arg])
 }
 
