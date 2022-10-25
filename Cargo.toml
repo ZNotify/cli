@@ -11,6 +11,7 @@ readme = "README.md"
 [dependencies]
 clap = { version = "4.0.18", features = ["derive", "cargo", "std"] }
 tokio = { version = "1.21.2", features = ["rt-multi-thread"] }
+openssl-sys = { version = "*", features = ["vendored"] }
 znotify = { version = "0.0.3" }
 
 [profile.release]
