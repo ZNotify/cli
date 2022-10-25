@@ -46,6 +46,7 @@ jobs:
       - name: Build binary
         run: |
           cargo build --release --bins --target ${{ matrix.target }}
+          cargo deb --target ${{ matrix.target }}
 
       - name: Rename binary
         run: |
