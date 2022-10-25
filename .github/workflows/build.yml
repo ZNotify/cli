@@ -39,9 +39,7 @@ jobs:
         run: |
           cargo install cargo-deb
           rustup target add ${{ matrix.target }}
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install --assume-yes pkg-config libssl-dev libssl-dev:arm64 gcc-aarch64-linux-gnu
+          sudo apt-get install --assume-yes gcc-aarch64-linux-gnu
 
       - name: Build binary
         run: |
