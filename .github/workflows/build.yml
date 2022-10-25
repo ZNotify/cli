@@ -126,22 +126,9 @@ jobs:
             target/
           key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-key
 
-      - name: Cache vcpkg
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ env.VCPKG_ROOT }}
-            ${{ github.workspace }}/build/vcpkg_installed
-            !${{ env.VCPKG_ROOT }}/.git
-            !${{ env.VCPKG_ROOT }}/buildtrees
-            !${{ env.VCPKG_ROOT }}/packages
-            !${{ env.VCPKG_ROOT }}/downloads
-          key: ${{ matrix.target }}-vcpkg-openssl
-
       - name: Env init
         run: |
           rustup target add ${{ matrix.target }}
-          vcpkg install openssl:x64-windows
 
       - name: Build binary
         run: |
