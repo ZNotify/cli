@@ -133,7 +133,7 @@ jobs:
           key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
 
       - name: Cache vcpkg
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/vcpkg
@@ -142,7 +142,7 @@ jobs:
             ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
             ${{ env.LOCALAPPDATA }}\vcpkg\archives
             ${{ env.APPDATA }}\vcpkg\archives
-          key: ${{ runner.os }}-${{ env.BUILD_TYPE }}-vcpkg
+          key: ${{ runner.os }}-${{ matrix.target }}-vcpkg
 
       - name: Env init
         run: |
@@ -162,3 +162,22 @@ jobs:
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
+
+  release:
+    if: github.event_name == 'push'
+    needs: [build_binary_linux, build_binary_macos, build_binary_windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: binary
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            binary/*
