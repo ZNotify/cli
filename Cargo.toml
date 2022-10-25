@@ -29,3 +29,6 @@ assets = [
     ["target/release/znotify", "usr/bin/znotify", "755"],
     ["README.md", "usr/share/doc/znotify/README", "644"],
 ]
+
+[target.aarch64-unknown-linux-gnu]
+linker = "aarch64-linux-gnu-gcc"
