@@ -33,7 +33,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
+          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo
 
       - name: Env init
         run: |
@@ -81,7 +81,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             target/
-          key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
+          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo
 
       - name: Env init
         run: |
@@ -130,19 +130,19 @@ jobs:
             ~/.cargo/.crates.toml
             ~/.cargo/.crates2.json
             target/
-          key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
+          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo
 
       - name: Cache vcpkg
         uses: actions/cache@v3
         with:
           path: |
-            ~/vcpkg
-            ./build/vcpkg_installed
-            ${{ env.HOME }}/.cache/vcpkg/archives
-            ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
-            ${{ env.LOCALAPPDATA }}\vcpkg\archives
-            ${{ env.APPDATA }}\vcpkg\archives
-          key: ${{ runner.os }}-${{ matrix.target }}-vcpkg
+            ${{ env.VCPKG_ROOT }}
+            ${{ github.workspace }}/build/vcpkg_installed
+            !${{ env.VCPKG_ROOT }}/.git
+            !${{ env.VCPKG_ROOT }}/buildtrees
+            !${{ env.VCPKG_ROOT }}/packages
+            !${{ env.VCPKG_ROOT }}/downloads
+          key: ${{ matrix.target }}-vcpkg-openssl
 
       - name: Env init
         run: |
@@ -180,4 +180,9 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            binary/*
+            binary/aarch64-apple-darwin/*
+            binary/aarch64-pc-windows-msvc/*
+            binary/aarch64-unknown-linux-gnu/*
+            binary/x86_64-apple-darwin/*
+            binary/x86_64-pc-windows-msvc/*
+            binary/x86_64-unknown-linux-gnu/*
