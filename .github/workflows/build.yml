@@ -88,6 +88,8 @@ jobs:
       - name: Build binary
         run: |
           cargo build --release --bins --target ${{ matrix.target }}
+        env:
+          CC: gcc-11
 
       - name: Rename binary
         run: |
