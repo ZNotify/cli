@@ -47,12 +47,12 @@ jobs:
           cargo build --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
-        if: !contains(matrix.target, 'windows')
+        if: contains(matrix.target, 'windows') == false
         run: |
           mv target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
       - name: Rename binary
-        if: contains(matrix.target, 'windows')
+        if: contains(matrix.target, 'windows') == true
         run: |
           mv target/${{ matrix.target }}/release/znotify.exe target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
 
