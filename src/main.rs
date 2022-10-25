@@ -1,7 +1,10 @@
 use clap::{Command, crate_authors, crate_version};
-use tokio::runtime::Runtime;
+use utils::run_blocking;
 
 mod send;
+mod login;
+mod config;
+mod utils;
 
 fn main() {
     let matches = Command::new("ZNotify")
@@ -12,11 +15,16 @@ fn main() {
         .about("Send notification to ZNotify.")
         .arg_required_else_help(true)
         .subcommand(send::send_command())
+        .subcommand(login::login_command())
         .get_matches();
     match matches.subcommand() {
         Some(("send", sub_matches)) =>
             {
-                Runtime::new().unwrap().block_on(send::send_action(sub_matches));
+                run_blocking(send::send_action(sub_matches));
+            }
+        Some(("login", sub_matches)) =>
+            {
+                run_blocking(login::login_action(sub_matches));
             }
         _ => {}
     }
