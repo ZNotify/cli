@@ -38,13 +38,11 @@ jobs:
             target/
           key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
 
-      - name: Install Cross
+      - name: Env init
         run: |
           cargo install cross --git https://github.com/cross-rs/cross
-
-      - name: Add target
-        run: |
           rustup target add ${{ matrix.target }}
+          sudo apt update && apt install pkg-config libssl-dev
 
       - name: Build binary
         run: |
