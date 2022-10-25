@@ -28,12 +28,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
+            ~/.cargo/
             target/
-          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo
+          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-key
 
       - name: Env init
         run: |
@@ -81,12 +78,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
+            ~/.cargo/
             target/
-          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo
+          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-key
 
       - name: Env init
         run: |
@@ -128,14 +122,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            ~/.cargo/.crates.toml
-            ~/.cargo/.crates2.json
+            ~/.cargo/
             target/
-          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo
+          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-key
 
       - name: Cache vcpkg
         uses: actions/cache@v3
