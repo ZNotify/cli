@@ -127,6 +127,8 @@ jobs:
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
             target/
           key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
 
