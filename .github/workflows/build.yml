@@ -38,13 +38,13 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
 
-      - name: Add rust target
+      - name: Install Cross
         run: |
-          rustup target add ${{ matrix.target }}
+          cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Build binary
         run: |
-          cargo build --release --bins --target ${{ matrix.target }}
+          cross build --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
         if: contains(matrix.target, 'windows') == false
