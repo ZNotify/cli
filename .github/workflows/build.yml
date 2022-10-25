@@ -24,7 +24,8 @@ jobs:
         with:
           toolchain: stable
 
-      - uses: actions/cache@v3
+      - name: Cache cargo
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/
@@ -71,7 +72,8 @@ jobs:
         with:
           toolchain: stable
 
-      - uses: actions/cache@v3
+      - name: Cache cargo
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/
@@ -117,7 +119,8 @@ jobs:
         with:
           toolchain: stable
 
-      - uses: actions/cache@v3
+      - name: Cache cargo
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cargo/bin/
@@ -126,6 +129,18 @@ jobs:
             ~/.cargo/git/db/
             target/
           key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
+
+      - name: Cache vcpkg
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/vcpkg
+            ./build/vcpkg_installed
+            ${{ env.HOME }}/.cache/vcpkg/archives
+            ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
+            ${{ env.LOCALAPPDATA }}\vcpkg\archives
+            ${{ env.APPDATA }}\vcpkg\archives
+          key: ${{ runner.os }}-${{ env.BUILD_TYPE }}-vcpkg
 
       - name: Env init
         run: |
