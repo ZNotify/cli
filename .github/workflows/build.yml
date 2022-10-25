@@ -7,15 +7,13 @@ on:
     branches: [ master ]
 
 jobs:
-  build_binary:
+  build_binary_unix:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         target:
-          - x86_64-pc-windows-msvc
           - x86_64-unknown-linux-gnu
           - x86_64-apple-darwin
-          - aarch64-pc-windows-msvc
           - aarch64-unknown-linux-gnu
           - aarch64-apple-darwin
 
@@ -49,17 +47,56 @@ jobs:
           cross build --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
-        if: contains(matrix.target, 'windows') == false
         run: |
           mv target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+            name: ${{ matrix.target }}
+            path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
+
+  build_binary_windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-pc-windows-msvc
+          - aarch64-pc-windows-msvc
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Rust Setup
+        id: setup
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
+
+      - name: Env init
+        run: |
+          rustup target add ${{ matrix.target }}
+
+      - name: Build binary
+        run: |
+          cargo build --release --bins --target ${{ matrix.target }}
+
       - name: Rename binary
-        if: contains(matrix.target, 'windows') == true
         run: |
           mv target/${{ matrix.target }}/release/znotify.exe target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-            name: ${{ matrix.target }}
-            path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}(.exe)?
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}(.exe)?
