@@ -54,7 +54,7 @@ jobs:
             path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
   build_binary_macos:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     strategy:
       matrix:
         target:
@@ -88,8 +88,6 @@ jobs:
       - name: Build binary
         run: |
           cargo build --release --bins --target ${{ matrix.target }}
-        env:
-          CC: gcc-11
 
       - name: Rename binary
         run: |
