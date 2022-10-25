@@ -42,7 +42,7 @@ jobs:
         run: |
           cargo install cross --git https://github.com/cross-rs/cross
           rustup target add ${{ matrix.target }}
-          sudo apt update && apt install pkg-config libssl-dev
+          sudo apt update && sudo apt install pkg-config libssl-dev
 
       - name: Build binary
         run: |
