@@ -37,7 +37,7 @@ jobs:
 
       - name: Env init
         run: |
-          cargo install cross
+          cargo install cross --force
           rustup target add ${{ matrix.target }}
           sudo apt update && sudo apt install pkg-config libssl-dev
 
