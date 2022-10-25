@@ -2,13 +2,17 @@
 name = "znotify-cli"
 version = "0.1.0"
 edition = "2021"
+description = "Send notification to ZNotify server"
+authors = ["Zxilly <zxilly@outlook.com>"]
+license = "MIT"
+readme = "README.md"
 
 
 [dependencies]
 clap = { version = "4.0.18", features = ["derive", "cargo", "std"] }
 tokio = { version = "1.21.2", features = ["rt-multi-thread"] }
 openssl-sys = { version = "*", features = ["vendored"] }
-znotify = "0.0.3"
+znotify = { version = "0.0.3" }
 
 [profile.release]
 lto = true
@@ -17,5 +21,11 @@ lto = true
 name = "znotify"
 path = "src/main.rs"
 
-[target.aarch64-unknown-linux-gnu]
-pre-build = ["dpkg --add-architecture arm64 && apt-get update && apt-get install --assume-yes libssl-dev:arm64"]
+[package.metadata.deb]
+section = "utility"
+priority = "optional"
+license-file = ["LICENSE", "4"]
+assets = [
+    ["target/release/znotify", "usr/bin/znotify", "755"],
+    ["README.md", "usr/share/doc/znotify/README", "644"],
+]

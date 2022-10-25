@@ -37,13 +37,16 @@ jobs:
 
       - name: Env init
         run: |
-          cargo install cross --force
+          cargo install cargo-deb
           rustup target add ${{ matrix.target }}
-          sudo apt update && sudo apt install pkg-config libssl-dev
+          sudo apt update && sudo apt install 
+          dpkg --add-architecture arm64
+          apt-get update
+          apt-get install --assume-yes pkg-config libssl-dev libssl-dev:arm64 gcc-aarch64-linux-gnu
 
       - name: Build binary
         run: |
-          cross build --release --bins --target ${{ matrix.target }}
+          cargo build --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
         run: |
@@ -53,7 +56,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
             name: ${{ matrix.target }}
-            path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
+            path: |
+              target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
+              target/${{ matrix.target }}/debian/*.deb
 
   build_binary_macos:
     runs-on: macos-latest
