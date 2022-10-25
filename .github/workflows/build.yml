@@ -162,3 +162,4 @@ jobs:
           title: "Development Build"
           files: |
             binary/*/*
+            binary/*/*/*
