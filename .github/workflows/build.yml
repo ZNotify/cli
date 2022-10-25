@@ -161,9 +161,4 @@ jobs:
           prerelease: true
           title: "Development Build"
           files: |
-            binary/aarch64-apple-darwin/*
-            binary/aarch64-pc-windows-msvc/*
-            binary/aarch64-unknown-linux-gnu/*
-            binary/x86_64-apple-darwin/*
-            binary/x86_64-pc-windows-msvc/*
-            binary/x86_64-unknown-linux-gnu/*
+            binary/*/*
