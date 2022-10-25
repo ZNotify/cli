@@ -7,15 +7,13 @@ on:
     branches: [ master ]
 
 jobs:
-  build_binary_unix:
+  build_binary_linux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         target:
           - x86_64-unknown-linux-gnu
-          - x86_64-apple-darwin
           - aarch64-unknown-linux-gnu
-          - aarch64-apple-darwin
 
     steps:
       - uses: actions/checkout@v3
@@ -55,6 +53,51 @@ jobs:
         with:
             name: ${{ matrix.target }}
             path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
+
+  build_binary_macos:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Rust Setup
+        id: setup
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}
+
+      - name: Env init
+        run: |
+          rustup target add ${{ matrix.target }}
+
+      - name: Build binary
+        run: |
+          cross build --release --bins --target ${{ matrix.target }}
+
+      - name: Rename binary
+        run: |
+          mv target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
   build_binary_windows:
     runs-on: windows-latest
