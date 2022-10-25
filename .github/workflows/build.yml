@@ -84,6 +84,7 @@ jobs:
       - name: Env init
         run: |
           rustup target add ${{ matrix.target }}
+          brew install openssl
 
       - name: Build binary
         run: |
@@ -129,6 +130,7 @@ jobs:
       - name: Env init
         run: |
           rustup target add ${{ matrix.target }}
+          vcpkg install openssl:x64-windows
 
       - name: Build binary
         run: |
