@@ -11,3 +11,7 @@ znotify = "0.0.3"
 
 [profile.release]
 lto = true
+
+[[bin]]
+name = "znotify"
+path = "src/main.rs"
