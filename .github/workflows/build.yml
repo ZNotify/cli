@@ -36,13 +36,12 @@ jobs:
 
       - name: Env init
         run: |
-          cargo install cross --git https://github.com/cross-rs/cross
           rustup target add ${{ matrix.target }}
           sudo apt update && sudo apt install pkg-config libssl-dev
 
       - name: Build binary
         run: |
-          cross build --release --bins --target ${{ matrix.target }}
+          cargo build --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
         run: |
