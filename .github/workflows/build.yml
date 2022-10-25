@@ -87,7 +87,7 @@ jobs:
 
       - name: Build binary
         run: |
-          cross build --release --bins --target ${{ matrix.target }}
+          cargo build --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
         run: |
