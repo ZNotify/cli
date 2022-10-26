@@ -40,13 +40,8 @@ jobs:
         run: |
           cargo install cargo-deb
           rustup target add ${{ matrix.target }}
-          if [ "${{ matrix.target }}" = "x86_64-unknown-linux-musl" ]; then
-            sudo apt-get install musl-tools
-            
-          elif [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+          if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
             sudo apt-get install -y gcc-aarch64-linux-gnu
-          elif [ "${{ matrix.target }}" = "aarch64-unknown-linux-musl" ]; then
-            sudo apt-get install -y musl-tools gcc-aarch64-linux-gnu
           elif [ "${{ matrix.target }}" = "mipsel-unknown-linux-gnu" ]; then
             sudo apt-get install -y gcc-mipsel-linux-gnu
           elif [ "${{ matrix.target }}" = "mips64-unknown-linux-gnuabi64" ]; then
@@ -56,9 +51,8 @@ jobs:
       - name: Build binary
         run: |
           cargo build --release --bins --target ${{ matrix.target }}
-          if [[ "${{ matrix.target }}" != *"musl"* ]]; then
-              cargo deb --target ${{ matrix.target }}
-          fi
+          cargo deb --target ${{ matrix.target }}
+          
 
       - name: Rename binary
         shell: bash
