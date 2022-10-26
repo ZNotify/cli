@@ -6,6 +6,9 @@ description = "Send notification to ZNotify server"
 authors = ["Zxilly <zxilly@outlook.com>"]
 license = "MIT"
 readme = "README.md"
+homepage = "https://github.com/ZNotify/cli"
+repository = "https://github.com/ZNotify/cli"
+categories = ["command-line-interface"]
 
 
 [dependencies]
