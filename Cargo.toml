@@ -15,7 +15,6 @@ categories = ["command-line-interface"]
 clap = { version = "4.0.18", features = ["derive", "cargo", "std"] }
 tokio = { version = "1.21.2", features = ["rt-multi-thread"] }
 serde = { version = "1.0", features = ["derive"] }
-openssl-sys = { version = "*", features = ["vendored"] }
 znotify = { version = "0.0.3" }
 dirs = "4.0.0"
 toml = "0.5.9"
