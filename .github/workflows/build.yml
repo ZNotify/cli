@@ -50,7 +50,7 @@ jobs:
           elif [ "${{ matrix.target }}" = "mipsel-unknown-linux-gnu" ]; then
             sudo apt-get install -y gcc-mipsel-linux-gnu
           elif [ "${{ matrix.target }}" = "mips64-unknown-linux-gnuabi64" ]; then
-            sudo apt-get install -y gcc-mips64el-linux-gnuabi64
+            sudo apt-get install -y gcc-mips64-linux-gnuabi64
           fi
 
       - name: Build binary
