@@ -1164,7 +1164,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "dirs",
- "openssl-sys",
+ "openssl",
  "serde",
  "tokio",
  "toml",
