@@ -19,6 +19,9 @@ znotify = { version = "0.0.3" }
 dirs = "4.0.0"
 toml = "0.5.9"
 
+[target.'cfg(not(target_arch = "x86_64"))'.dependencies]
+openssl = { version = "0.10.42", features = ["vendored"] }
+
 [profile.release]
 lto = true
 
