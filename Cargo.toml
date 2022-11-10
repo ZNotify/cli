@@ -15,9 +15,11 @@ categories = ["command-line-interface"]
 clap = { version = "4.0.18", features = ["derive", "cargo", "std"] }
 tokio = { version = "1.21.2", features = ["rt-multi-thread"] }
 serde = { version = "1.0", features = ["derive"] }
-znotify = { version = "0.0.6" }
+znotify = { version = "0.1.0" }
 dirs = "4.0.0"
 toml = "0.5.9"
+openssl = { version = "0.10.42", features = ["vendored"] }
+
 
 [profile.release]
 lto = true
