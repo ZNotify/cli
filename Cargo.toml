@@ -21,7 +21,6 @@ toml = "0.5.9"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 openssl = { version = "0.10.42", features = ["vendored"] }
-https://github.com/ZNotify/cli/releases/download/latest/znotify-x86_64-pc-windows-msvc.exe
 
 
 [profile.release]
