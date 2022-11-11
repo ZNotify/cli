@@ -1,6 +1,6 @@
 [package]
 name = "znotify-cli"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Send notification to ZNotify server"
 authors = ["Zxilly <zxilly@outlook.com>"]
