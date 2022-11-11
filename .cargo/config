@@ -6,3 +6,6 @@ linker = "mipsel-linux-gnu-gcc"
 
 [target.mips64-unknown-linux-gnuabi64]
 linker = "mips64-linux-gnuabi64-gcc"
+
+[target.'cfg(all(windows, target_env = "msvc"))']
+rustflags = ["-C", "target-feature=+crt-static"]
