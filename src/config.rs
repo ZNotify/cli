@@ -1,5 +1,7 @@
 use std::fs::File;
+use std::str::FromStr;
 use serde::{Deserialize, Serialize};
+use toml_edit::{Document, easy, value};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct Config {
@@ -36,11 +38,19 @@ pub(crate) fn update_config(user_id: String, endpoint: Option<String>) {
     if endpoint.is_some() {
         config.endpoint = endpoint;
     }
-    let config_str = toml::to_string(&config).unwrap_or_else(|_| {
-        panic!("Failed to serialize config");
+
+    // update exist file
+    let exist_config = std::fs::read_to_string(config_path.clone()).unwrap_or_else(|_| {
+        panic!("Failed to read config file: {}", config_path.to_str().unwrap());
     });
-    std::fs::write(config_path, config_str).unwrap_or_else(|_| {
-        panic!("Failed to write config file");
+    let mut doc = Document::from_str(&exist_config).unwrap_or_else(|_| {
+        panic!("Failed to parse config file: {}", config_path.to_str().unwrap());
+    });
+    doc["user_id"] = value(config.user_id.clone().unwrap());
+    doc["endpoint"] = value(config.endpoint.clone().unwrap());
+    let new_config = doc.to_string();
+    std::fs::write(config_path.clone(), new_config).unwrap_or_else(|_| {
+        panic!("Failed to write config file: {}", config_path.to_str().unwrap());
     });
 }
 
@@ -53,10 +63,8 @@ pub(crate) fn get_config() -> Config {
         eprintln!("Failed to read config file");
         return String::new();
     });
-    let config: Config = toml::from_str(&config_str).unwrap_or_else(|_| {
-        if !config_str.is_empty() {
-            eprintln!("Failed to parse config file");
-        }
+    let config: Config = easy::from_str(&config_str).unwrap_or_else(|_| {
+        eprintln!("Failed to parse config file");
         return Config::default();
     });
     config
