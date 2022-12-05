@@ -33,21 +33,18 @@ pub(crate) fn update_config(user_id: String, endpoint: Option<String>) {
             panic!("Failed to create config file: {}", config_path.to_str().unwrap());
         });
     }
-    let mut config = Config::default();
-    config.user_id = Some(user_id);
+    let mut config = Config { user_id: Some(user_id), ..Default::default() };
     if endpoint.is_some() {
         config.endpoint = endpoint;
     }
 
     // update exist file
-    let exist_config = std::fs::read_to_string(config_path.clone()).unwrap_or_else(|_| {
-        panic!("Failed to read config file: {}", config_path.to_str().unwrap());
-    });
+    let exist_config = std::fs::read_to_string(config_path.clone()).unwrap_or_default();
     let mut doc = Document::from_str(&exist_config).unwrap_or_else(|_| {
         panic!("Failed to parse config file: {}", config_path.to_str().unwrap());
     });
-    doc["user_id"] = value(config.user_id.clone().unwrap());
-    doc["endpoint"] = value(config.endpoint.clone().unwrap());
+    doc["user_id"] = value(config.user_id.unwrap());
+    doc["endpoint"] = value(config.endpoint.unwrap());
     let new_config = doc.to_string();
     std::fs::write(config_path.clone(), new_config).unwrap_or_else(|_| {
         panic!("Failed to write config file: {}", config_path.to_str().unwrap());
@@ -61,11 +58,15 @@ pub(crate) fn get_config() -> Config {
     }
     let config_str = std::fs::read_to_string(config_path).unwrap_or_else(|_| {
         eprintln!("Failed to read config file");
-        return String::new();
+        String::new()
     });
+    if config_str.is_empty() {
+        return Config::default();
+    }
+
     let config: Config = easy::from_str(&config_str).unwrap_or_else(|_| {
         eprintln!("Failed to parse config file");
-        return Config::default();
+        Config::default()
     });
     config
 }
