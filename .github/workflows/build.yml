@@ -5,6 +5,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  release:
+    types: [ released ]
 
 jobs:
   build_binary_linux:
@@ -49,7 +51,7 @@ jobs:
         run: |
           cargo build --release --bins --target ${{ matrix.target }}
           cargo deb --target ${{ matrix.target }}
-          
+
 
       - name: Rename binary
         shell: bash
@@ -59,10 +61,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-            name: ${{ matrix.target }}
-            path: |
-              target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
-              target/${{ matrix.target }}/debian/*.deb
+          name: ${{ matrix.target }}
+          path: |
+            target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
+            target/${{ matrix.target }}/debian/*.deb
 
   build_binary_macos:
     runs-on: macos-latest
@@ -151,9 +153,9 @@ jobs:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
 
-  release:
+  release_nightly:
     if: github.event_name == 'push'
-    needs: [build_binary_linux, build_binary_macos, build_binary_windows]
+    needs: [ build_binary_linux, build_binary_macos, build_binary_windows ]
     runs-on: ubuntu-latest
     steps:
       - name: Get all artifacts
@@ -167,6 +169,36 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
+          files: |
+            binary/*/*
+            binary/*/*/*
+
+  release_stable:
+    if: github.event_name == 'release'
+    needs: [ build_binary_linux, build_binary_macos, build_binary_windows ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: binary
+
+      - name: Check version
+        run: |
+          chmod +x binary/x86_64-unknown-linux-gnu/release/znotify-x86_64-unknown-linux-gnu
+          version=$(./binary/x86_64-unknown-linux-gnu/release/znotify-x86_64-unknown-linux-gnu --version)
+          if [ "ZNotify ${{ github.event.release.tag_name }}" != "$version" ]; then
+              echo "Version mismatch"
+              exit 1
+          fi
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.event.release.tag_name }}"
+          title: "${{ github.event.release.tag_name }}"
           files: |
             binary/*/*
             binary/*/*/*

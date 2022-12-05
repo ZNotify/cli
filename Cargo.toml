@@ -25,6 +25,7 @@ openssl = { version = "0.10.42", features = ["vendored"] }
 
 [profile.release]
 lto = true
+opt-level = 3
 
 [[bin]]
 name = "znotify"
