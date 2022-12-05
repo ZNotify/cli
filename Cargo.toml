@@ -20,7 +20,7 @@ dirs = "4.0.0"
 toml_edit = { version = "0.15.0", features = ["easy"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
-openssl = { version = "0.10.42", features = ["vendored"] }
+openssl = { version = "0.10.43", features = ["vendored"] }
 
 
 [profile.release]
