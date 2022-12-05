@@ -180,6 +180,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'scripts/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
       - name: Get all artifacts
         uses: actions/download-artifact@v3
         with:
@@ -194,7 +205,8 @@ jobs:
               exit 1
           fi
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Release
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ github.event.release.tag_name }}"
@@ -202,3 +214,7 @@ jobs:
           files: |
             binary/*/*
             binary/*/*/*
+
+      - name: Generate winget manifest
+        run: |
+          python scripts/winget.py
