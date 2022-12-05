@@ -87,7 +87,6 @@ repo = git.Repo(repo_base)
 repo.config_writer().set_value("user", "name", "Zxilly").release()
 repo.config_writer().set_value("user", "email", "zxilly@outlook.com").release()
 
-repo.git.checkout("master")
 repo.git.add(A=True)
 repo.git.commit(m=f"chore: update winget manifest to {new_version}\n\n[skip ci]")
 repo.git.push()
