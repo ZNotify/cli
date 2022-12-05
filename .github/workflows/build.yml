@@ -211,6 +211,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ github.event.release.tag_name }}"
           title: "${{ github.event.release.tag_name }}"
+          prerelease: false
           files: |
             binary/*/*
             binary/*/*/*
