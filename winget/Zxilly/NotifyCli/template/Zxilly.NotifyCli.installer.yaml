@@ -1,0 +1,18 @@
+PackageIdentifier: Zxilly.NotifyCli
+PackageVersion: 0.1.1
+InstallerLocale: en-US
+InstallerType: portable
+InstallModes:
+- silent
+Commands:
+- znotify
+ReleaseDate:
+Installers:
+- Architecture: x64
+  InstallerUrl:
+  InstallerSha256:
+- Architecture: arm64
+  InstallerUrl:
+  InstallerSha256:
+ManifestType: installer
+ManifestVersion: 1.2.0

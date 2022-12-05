@@ -28,7 +28,7 @@ new_version = os.getenv("GITHUB_REF_NAME")
 
 repo_base = Path(__file__).parent.parent
 
-manifest_folder = repo_base / "winget" / "Zxilly" / "NotifyCli" / "0.1.1"
+manifest_folder = repo_base / "winget" / "Zxilly" / "NotifyCli" / "template"
 target_folder = repo_base / "winget" / "Zxilly" / "NotifyCli" / new_version
 
 windows_arm64_file = \
@@ -87,6 +87,7 @@ repo = git.Repo(repo_base)
 repo.config_writer().set_value("user", "name", "Zxilly").release()
 repo.config_writer().set_value("user", "email", "zxilly@outlook.com").release()
 
+repo.git.checkout("master")
 repo.git.add(A=True)
 repo.git.commit(m=f"chore: update winget manifest to {new_version}\n\n[skip ci]")
 repo.git.push()
