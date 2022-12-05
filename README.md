@@ -1,6 +1,24 @@
 # Notify-cli
 Send message to ZNotify server with cli.
 
+## Installation
+
+### Windows
+
+```powershell
+winget install Zxilly.NotifyCli
+```
+
+### Debian
+```bash
+# Download from release
+sudo apt install znotify-cli_*.deb
+```
+
+### Other
+
+Download from release,grant permission and place it in your PATH.
+
 ## Usage
 
 ```bash
