@@ -1,5 +1,5 @@
 use clap::{Arg, ArgMatches, Command};
-use znotify::{Client, MessageOptions};
+use znotify::{Client, MessageOptions, entity::Priority};
 
 pub(crate) fn send_command() -> Command {
     let title_arg = Arg::new("title")
@@ -23,10 +23,17 @@ pub(crate) fn send_command() -> Command {
         .long("user_id")
         .required(false)
         .help("User ID to send notification");
+    let priority_arg = Arg::new("priority")
+        .short('p')
+        .long("priority")
+        .required(false)
+        .default_value("normal")
+        .value_parser(["low", "normal", "high"])
+        .help("Priority of the notification");
     Command::new("send")
         .short_flag('s')
         .about("Send notification to ZNotify")
-        .args(&[user_id_arg, title_arg, content_arg, long_arg])
+        .args(&[user_id_arg, title_arg, content_arg, long_arg, priority_arg])
 }
 
 pub(crate) async fn send_action(args: &ArgMatches) {
@@ -44,6 +51,16 @@ pub(crate) async fn send_action(args: &ArgMatches) {
     let title: Option<String> = args.get_one::<String>("title").map(|s| s.to_owned());
     let content = args.get_one::<String>("content").expect("Content is required").to_owned();
     let long = args.get_one::<String>("long").map(|s| s.to_owned());
+    let priority = args
+        .get_one::<String>("priority")
+        .map(|s| s.to_owned())
+        .map(|s| match s.as_str() {
+            "high" => Priority::High,
+            "normal" => Priority::Normal,
+            "low" => Priority::Low,
+            _ => Priority::Normal,
+        });
+
 
     let client = Client::create(user_id.clone(), config_endpoint.clone()).await.unwrap_or_else(|e| {
         eprintln!("Error: {}", e);
@@ -54,6 +71,7 @@ pub(crate) async fn send_action(args: &ArgMatches) {
         title,
         content,
         long,
+        priority,
     }).await;
     if ret.is_ok() {
         let msg = ret.unwrap();
