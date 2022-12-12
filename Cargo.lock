@@ -1430,9 +1430,9 @@ dependencies = [
 
 [[package]]
 name = "znotify"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "020eede5054e29cf5ad2210bc5734b227f7ada17bc1620240a49fb338b556579"
+checksum = "d778b4b55c07ba999d81c9cd5bbe0d15ebb2c343dd254a4b3c820111ae36ed5f"
 dependencies = [
  "reqwest",
  "serde",
