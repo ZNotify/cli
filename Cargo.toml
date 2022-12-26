@@ -21,7 +21,7 @@ toml_edit = { version = "0.15.0", features = ["easy"] }
 self_update = "0.32.0"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-openssl = { version = "0.10.44", features = ["vendored"] }
+openssl = { version = "0.10.45", features = ["vendored"] }
 
 
 [profile.release]
