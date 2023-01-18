@@ -3,11 +3,11 @@ use znotify::Client;
 use crate::config::update_config;
 
 pub(crate) fn login_command() -> Command {
-    let user_id_arg = Arg::new("user_id")
+    let user_secret_arg = Arg::new("user_id")
         .short('u')
-        .long("user_id")
+        .long("user_secret")
         .required(false)
-        .help("User ID to login");
+        .help("User secret to login");
     let endpoint_arg = Arg::new("endpoint")
         .short('e')
         .long("endpoint")
@@ -17,19 +17,19 @@ pub(crate) fn login_command() -> Command {
     Command::new("login")
         .short_flag('l')
         .about("Login to ZNotify")
-        .args(&[user_id_arg, endpoint_arg])
+        .args(&[user_secret_arg, endpoint_arg])
 }
 
 pub(crate) async fn login_action(args: &ArgMatches) {
-    let mut user_id = args.get_one::<String>("user_id");
+    let mut user_secret = args.get_one::<String>("user_secret");
     let mut user_id_in = String::new();
-    if user_id.is_none() {
+    if user_secret.is_none() {
         println!("Please input your user ID:");
         std::io::stdin().read_line(&mut user_id_in).unwrap();
         user_id_in = user_id_in.trim().to_string().to_owned();
-        user_id = Some(&user_id_in);
+        user_secret = Some(&user_id_in);
     }
-    let user_id = user_id.unwrap().to_owned();
+    let user_id = user_secret.unwrap().to_owned();
 
     let endpoint: String = args.get_one::<String>("endpoint").unwrap().to_owned();
 

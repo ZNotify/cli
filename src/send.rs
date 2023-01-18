@@ -18,9 +18,9 @@ pub(crate) fn send_command() -> Command {
         .long("long")
         .required(false)
         .help("Long content of notification");
-    let user_id_arg = Arg::new("user_id")
+    let user_secret_arg = Arg::new("user_secret")
         .short('u')
-        .long("user_id")
+        .long("user_secret")
         .required(false)
         .help("User ID to send notification");
     let priority_arg = Arg::new("priority")
@@ -33,12 +33,12 @@ pub(crate) fn send_command() -> Command {
     Command::new("send")
         .short_flag('s')
         .about("Send notification to ZNotify")
-        .args(&[user_id_arg, title_arg, content_arg, long_arg, priority_arg])
+        .args(&[user_secret_arg, title_arg, content_arg, long_arg, priority_arg])
 }
 
 pub(crate) async fn send_action(args: &ArgMatches) {
     let config = crate::config::get_config();
-    let config_user_id = config.user_id;
+    let config_user_id = config.user_secret;
     let config_endpoint = config.endpoint;
 
     let user_id = args.get_one::<String>("user_id");

@@ -5,20 +5,20 @@ use toml_edit::{Document, easy, value};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct Config {
-    pub(crate) user_id: Option<String>,
+    pub(crate) user_secret: Option<String>,
     pub(crate) endpoint: Option<String>,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            user_id: None,
+            user_secret: None,
             endpoint: Some(String::from("https://push.learningman.top")),
         }
     }
 }
 
-pub(crate) fn update_config(user_id: String, endpoint: Option<String>) {
+pub(crate) fn update_config(user_secret: String, endpoint: Option<String>) {
     let config_path = dirs::home_dir().unwrap().join(".znotify").join("config.toml");
     let config_dir = config_path.parent().unwrap_or_else(|| {
         panic!("Cannot get config directory");
@@ -33,7 +33,7 @@ pub(crate) fn update_config(user_id: String, endpoint: Option<String>) {
             panic!("Failed to create config file: {}", config_path.to_str().unwrap());
         });
     }
-    let mut config = Config { user_id: Some(user_id), ..Default::default() };
+    let mut config = Config { user_secret: Some(user_secret), ..Default::default() };
     if endpoint.is_some() {
         config.endpoint = endpoint;
     }
@@ -43,7 +43,7 @@ pub(crate) fn update_config(user_id: String, endpoint: Option<String>) {
     let mut doc = Document::from_str(&exist_config).unwrap_or_else(|_| {
         panic!("Failed to parse config file: {}", config_path.to_str().unwrap());
     });
-    doc["user_id"] = value(config.user_id.unwrap());
+    doc["user_secret"] = value(config.user_secret.unwrap());
     doc["endpoint"] = value(config.endpoint.unwrap());
     let new_config = doc.to_string();
     std::fs::write(config_path.clone(), new_config).unwrap_or_else(|_| {
