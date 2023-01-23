@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::fs::{self, File, read_to_string};
 use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use toml_edit::{Document, easy, value};
@@ -18,13 +18,13 @@ impl Default for Config {
     }
 }
 
-pub(crate) fn update_config(user_secret: String, endpoint: Option<String>) {
+pub(crate) fn update_config(cfg: Config) {
     let config_path = dirs::home_dir().unwrap().join(".znotify").join("config.toml");
     let config_dir = config_path.parent().unwrap_or_else(|| {
         panic!("Cannot get config directory");
     });
     if !config_dir.exists() {
-        std::fs::create_dir_all(config_dir).unwrap_or_else(|_| {
+        fs::create_dir_all(config_dir).unwrap_or_else(|_| {
             panic!("Failed to create config directory: {}", config_dir.to_str().unwrap());
         });
     }
@@ -33,20 +33,16 @@ pub(crate) fn update_config(user_secret: String, endpoint: Option<String>) {
             panic!("Failed to create config file: {}", config_path.to_str().unwrap());
         });
     }
-    let mut config = Config { user_secret: Some(user_secret), ..Default::default() };
-    if endpoint.is_some() {
-        config.endpoint = endpoint;
-    }
 
     // update exist file
-    let exist_config = std::fs::read_to_string(config_path.clone()).unwrap_or_default();
+    let exist_config = read_to_string(config_path.clone()).unwrap_or_default();
     let mut doc = Document::from_str(&exist_config).unwrap_or_else(|_| {
         panic!("Failed to parse config file: {}", config_path.to_str().unwrap());
     });
-    doc["user_secret"] = value(config.user_secret.unwrap());
-    doc["endpoint"] = value(config.endpoint.unwrap());
+    doc["user_secret"] = value(cfg.user_secret.unwrap());
+    doc["endpoint"] = value(cfg.endpoint.unwrap());
     let new_config = doc.to_string();
-    std::fs::write(config_path.clone(), new_config).unwrap_or_else(|_| {
+    fs::write(config_path.clone(), new_config).unwrap_or_else(|_| {
         panic!("Failed to write config file: {}", config_path.to_str().unwrap());
     });
 }
@@ -56,7 +52,7 @@ pub(crate) fn get_config() -> Config {
     if !config_path.exists() {
         return Config::default();
     }
-    let config_str = std::fs::read_to_string(config_path).unwrap_or_else(|_| {
+    let config_str = read_to_string(config_path).unwrap_or_else(|_| {
         eprintln!("Failed to read config file");
         String::new()
     });
