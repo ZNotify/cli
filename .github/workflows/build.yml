@@ -28,12 +28,10 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Cache cargo
-        uses: actions/cache@v3
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.2.0
         with:
-          path: |
-            ~/.cargo/
-          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-cache
+          shared-key: ${{ runner.os }}-cargo-${{ steps.setup.outputs.cachekey }}
 
       - name: Env init
         run: |
@@ -84,12 +82,10 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Cache cargo
-        uses: actions/cache@v3
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.2.0
         with:
-          path: |
-            ~/.cargo/
-          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-cache
+          shared-key: ${{ runner.os }}-cargo-${{ steps.setup.outputs.cachekey }}
 
       - name: Env init
         run: |
@@ -128,12 +124,10 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Cache cargo
-        uses: actions/cache@v3
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2.2.0
         with:
-          path: |
-            ~/.cargo/
-          key: ${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}-${{ steps.setup.outputs.cachekey }}-cargo-cache
+          shared-key: ${{ runner.os }}-cargo-${{ steps.setup.outputs.cachekey }}
 
       - name: Env init
         run: |
