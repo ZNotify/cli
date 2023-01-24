@@ -195,8 +195,6 @@ jobs:
 
       - name: Check version
         run: python scripts/version.py
-        env:
-          VERSION: ${{ github.event.release.tag_name }}
 
       - name: Release
         uses: "marvinpinto/action-automatic-releases@latest"

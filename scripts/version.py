@@ -1,9 +1,10 @@
 import os
 import rtoml
 
-current_version = os.getenv("VERSION")
+current_version = os.getenv("GITHUB_REF_NAME")
 
-config = rtoml.load("Cargo.toml")
+with open("Cargo.toml", "r") as f:
+    config = rtoml.load(f)
 
 if config["package"]["version"] != current_version:
     # exit with error message
