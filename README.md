@@ -22,17 +22,18 @@ Download from release,grant permission and place it in your PATH.
 ## Usage
 
 ```bash
-Send notification to ZNotify.
+Send notification to ZNotify server
 
-Usage: znotify [COMMAND]
+Usage: znotify [OPTIONS] <COMMAND>
 
 Commands:
-  send, -s   Send notification to ZNotify
-  login, -l  Login to ZNotify
-  upgrade    upgrade ZNotify to latest
-  help       Print this message or the help of the given subcommand(s)
+  upgrade  upgrade ZNotify to latest
+  login    Log into ZNotify
+  send     Send a message to ZNotify
+  help     Print this message or the help of the given subcommand(s)
 
 Options:
-  -h, --help     Print help information
-  -V, --version  Print version information
+      --generate <GENERATE>  Generate completion file for shell [possible values: bash, elvish, fish, powershell, zsh]
+  -h, --help                 Print help
+  -V, --version              Print version
 ```
