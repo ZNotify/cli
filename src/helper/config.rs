@@ -1,7 +1,7 @@
 use std::fs::{self, File, read_to_string};
 use std::str::FromStr;
 use serde::{Deserialize, Serialize};
-use toml_edit::{Document, easy, value};
+use toml_edit::{Document, value, de};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct Config {
@@ -52,17 +52,17 @@ pub(crate) fn get_config() -> Config {
     if !config_path.exists() {
         return Config::default();
     }
-    let config_str = read_to_string(config_path).unwrap_or_else(|_| {
+    let config_str = read_to_string(config_path).unwrap_or_else(|err| {
         eprintln!("Failed to read config file");
-        String::new()
+        panic!("{}", err)
     });
     if config_str.is_empty() {
         return Config::default();
     }
 
-    let config: Config = easy::from_str(&config_str).unwrap_or_else(|_| {
+    let config: Config = de::from_str(&config_str).unwrap_or_else(|err| {
         eprintln!("Failed to parse config file");
-        Config::default()
+        panic!("{}", err)
     });
     config
 }
