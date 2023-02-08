@@ -1,7 +1,8 @@
-use std::fs::{self, File, read_to_string};
-use std::str::FromStr;
 use serde::{Deserialize, Serialize};
-use toml_edit::{Document, value, de};
+use std::fs::{self, read_to_string, File};
+use std::path::{PathBuf};
+use std::str::FromStr;
+use toml_edit::{de, value, Document};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct Config {
@@ -18,44 +19,87 @@ impl Default for Config {
     }
 }
 
-pub(crate) fn update_config(cfg: Config) {
-    let config_path = dirs::home_dir().unwrap().join(".znotify").join("config.toml");
-    let config_dir = config_path.parent().unwrap_or_else(|| {
-        panic!("Cannot get config directory");
-    });
-    if !config_dir.exists() {
-        fs::create_dir_all(config_dir).unwrap_or_else(|_| {
-            panic!("Failed to create config directory: {}", config_dir.to_str().unwrap());
-        });
+fn get_config_dir() -> PathBuf {
+    let mut path = dirs::home_dir().unwrap();
+    path.push(".znotify");
+    path
+}
+
+fn get_config_path() -> PathBuf {
+    let mut path = get_config_dir();
+    path.push("config.toml");
+    path
+}
+
+fn read_config_string() -> String {
+    if !get_config_dir().exists() || !get_config_dir().is_dir() || !get_config_path().exists() {
+        return String::new();
     }
-    if !config_path.exists() {
-        File::create(config_path.clone()).unwrap_or_else(|_| {
-            panic!("Failed to create config file: {}", config_path.to_str().unwrap());
+
+    read_to_string(get_config_path().clone()).unwrap_or_else(|err| {
+        panic!(
+            "Failed to read config file: {}\n {}",
+            get_config_path().to_str().unwrap(),
+            err
+        );
+    })
+}
+
+fn write_config_string(s:String) {
+    if !get_config_dir().exists() {
+        fs::create_dir(get_config_dir().clone()).unwrap_or_else(|err| {
+            panic!(
+                "Failed to create config dir: {}\n{}",
+                get_config_dir().to_str().unwrap(),
+                err
+            );
         });
     }
 
+    if !get_config_dir().is_dir() {
+        panic!(
+            "Failed to create config dir: {}{}",
+            get_config_dir().to_str().unwrap(),
+            " not a directory"
+        );
+    }
+
+    if !get_config_path().exists() {
+        File::create(get_config_path().clone()).unwrap_or_else(|err| {
+            panic!(
+                "Failed to create config file: {}\n{}",
+                get_config_path().to_str().unwrap(),
+                err
+            );
+        });
+    }
+
+    fs::write(get_config_path().clone(), s).unwrap_or_else(|err| {
+        panic!(
+            "Failed to write config file: {}\n{}",
+            get_config_path().to_str().unwrap(),
+            err
+        );
+    });
+}
+
+pub(crate) fn update_config(cfg: Config) {
     // update exist file
-    let exist_config = read_to_string(config_path.clone()).unwrap_or_default();
-    let mut doc = Document::from_str(&exist_config).unwrap_or_else(|_| {
-        panic!("Failed to parse config file: {}", config_path.to_str().unwrap());
+    let exist_config_string = read_config_string();
+    let mut doc = Document::from_str(&exist_config_string).unwrap_or_else(|_| {
+        panic!(
+            "Failed to parse config file: {}",
+            get_config_path().to_str().unwrap()
+        );
     });
     doc["user_secret"] = value(cfg.user_secret.unwrap());
     doc["endpoint"] = value(cfg.endpoint.unwrap());
     let new_config = doc.to_string();
-    fs::write(config_path.clone(), new_config).unwrap_or_else(|_| {
-        panic!("Failed to write config file: {}", config_path.to_str().unwrap());
-    });
+    write_config_string(new_config);
 }
 
 pub(crate) fn get_config() -> Config {
-    let config_path = dirs::home_dir().unwrap().join(".znotify").join("config.toml");
-    if !config_path.exists() {
-        return Config::default();
-    }
-    let config_str = read_to_string(config_path).unwrap_or_else(|err| {
-        eprintln!("Failed to read config file");
-        panic!("{}", err)
-    });
+    let config_str = read_config_string();
     if config_str.is_empty() {
         return Config::default();
     }
