@@ -18,7 +18,7 @@ serde = { version = "1.0", features = ["derive"] }
 znotify = "0.2.0"
 dirs = "5.0.1"
 toml_edit = { version = "0.19.15", features = ["serde"] }
-self_update = "0.37.0"
+self_update = "0.38.0"
 async-trait = "0.1.73"
 shadow-rs = "0.23.0"
 clap_complete = "4.4.1"
