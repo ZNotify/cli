@@ -27,7 +27,7 @@ clap_complete = "4.4.4"
 shadow-rs = "0.25.0"
 
 [target.'cfg(target_os = "linux")'.dependencies]
-openssl = { version = "0.10.61", features = ["vendored"] }
+openssl = { version = "0.10.62", features = ["vendored"] }
 
 
 [profile.release]
