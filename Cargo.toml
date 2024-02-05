@@ -21,7 +21,7 @@ toml_edit = { version = "0.21.0", features = ["serde"] }
 self_update = "0.39.0"
 async-trait = "0.1.77"
 shadow-rs = "0.26.1"
-clap_complete = "4.4.9"
+clap_complete = "4.4.10"
 
 [build-dependencies]
 shadow-rs = "0.26.1"
