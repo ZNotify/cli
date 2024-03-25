@@ -19,7 +19,7 @@ znotify = "0.2.0"
 dirs = "5.0.1"
 toml_edit = { version = "0.22.7", features = ["serde"] }
 self_update = "0.39.0"
-async-trait = "0.1.78"
+async-trait = "0.1.79"
 shadow-rs = "0.27.1"
 clap_complete = "4.5.1"
 
