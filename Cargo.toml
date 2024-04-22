@@ -17,7 +17,7 @@ tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
 serde = { version = "1.0", features = ["derive"] }
 znotify = "0.2.0"
 dirs = "5.0.1"
-toml_edit = { version = "0.22.9", features = ["serde"] }
+toml_edit = { version = "0.22.12", features = ["serde"] }
 self_update = "0.39.0"
 async-trait = "0.1.80"
 shadow-rs = "0.27.1"
