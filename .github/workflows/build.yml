@@ -33,7 +33,7 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Rust Cache
-        uses: mozilla-actions/sccache-action@v0.0.3
+        uses: mozilla-actions/sccache-action@v0.0.5
 
       - name: Env init
         run: |
@@ -107,7 +107,6 @@ jobs:
       matrix:
         target:
           - x86_64-pc-windows-msvc
-          - x86_64-pc-windows-gnu
           - aarch64-pc-windows-msvc
 
     steps:
