@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::fs::{self, read_to_string, File};
 use std::path::{PathBuf};
 use std::str::FromStr;
-use toml_edit::{de, value, Document};
+use toml_edit::{de, value, DocumentMut};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct Config {
@@ -86,7 +86,7 @@ fn write_config_string(s:String) {
 pub(crate) fn update_config(cfg: Config) {
     // update exist file
     let exist_config_string = read_config_string();
-    let mut doc = Document::from_str(&exist_config_string).unwrap_or_else(|_| {
+    let mut doc = DocumentMut::from_str(&exist_config_string).unwrap_or_else(|_| {
         panic!(
             "Failed to parse config file: {}",
             get_config_path().to_str().unwrap()
