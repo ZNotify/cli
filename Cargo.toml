@@ -20,11 +20,11 @@ dirs = "5.0.1"
 toml_edit = { version = "0.22.20", features = ["serde"] }
 self_update = "0.41.0"
 async-trait = "0.1.81"
-shadow-rs = "0.32.0"
+shadow-rs = "0.33.0"
 clap_complete = "4.5.18"
 
 [build-dependencies]
-shadow-rs = "0.32.0"
+shadow-rs = "0.33.0"
 
 [target.'cfg(target_os = "linux")'.dependencies]
 openssl = { version = "0.10.66", features = ["vendored"] }
