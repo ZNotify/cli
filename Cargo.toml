@@ -12,7 +12,7 @@ categories = ["command-line-interface"]
 build = "build.rs"
 
 [dependencies]
-clap = { version = "4.5.18", features = ["derive", "cargo", "std"] }
+clap = { version = "4.5.19", features = ["derive", "cargo", "std"] }
 tokio = { version = "1.40.0", features = ["rt-multi-thread"] }
 serde = { version = "1.0", features = ["derive"] }
 znotify = "0.2.0"
