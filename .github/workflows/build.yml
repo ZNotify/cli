@@ -55,7 +55,7 @@ jobs:
           mv -f target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
           path: |
@@ -96,7 +96,7 @@ jobs:
           mv -f target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
@@ -135,7 +135,7 @@ jobs:
           mv -f target/${{ matrix.target }}/release/znotify.exe target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
