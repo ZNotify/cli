@@ -33,7 +33,7 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Rust Cache
-        uses: mozilla-actions/sccache-action@v0.0.7
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Env init
         run: |
@@ -80,7 +80,7 @@ jobs:
           toolchain: stable
 
       - name: Rust Cache
-        uses: mozilla-actions/sccache-action@v0.0.7
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Env init
         run: |
@@ -119,7 +119,7 @@ jobs:
           toolchain: stable
 
       - name: Rust Cache
-        uses: mozilla-actions/sccache-action@v0.0.7
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Env init
         run: |
