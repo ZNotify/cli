@@ -110,3 +110,38 @@ pub(crate) fn get_config() -> Config {
     });
     config
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_existing_config() {
+        let input = "# Existing CLI configuration\nuser_secret = \"test-secret\"\nendpoint = \"https://example.com/notify\"\n";
+        let config: Config = de::from_str(input).unwrap();
+        assert_eq!(config.user_secret.as_deref(), Some("test-secret"));
+        assert_eq!(config.endpoint.as_deref(), Some("https://example.com/notify"));
+    }
+
+    #[test]
+    fn config_updates_preserve_comments_and_round_trip_strings() {
+        let input = "# Keep this comment\nuser_secret = \"old\"\nendpoint = \"https://example.com\"\n";
+        let mut document = DocumentMut::from_str(input).unwrap();
+        let secret = "test-\"quoted\"-\\-通知";
+        let endpoint = "https://example.com/通知?key=value";
+        document["user_secret"] = value(secret);
+        document["endpoint"] = value(endpoint);
+        let output = document.to_string();
+        assert!(output.contains("# Keep this comment"));
+        let config: Config = de::from_str(&output).unwrap();
+        assert_eq!(config.user_secret.as_deref(), Some(secret));
+        assert_eq!(config.endpoint.as_deref(), Some(endpoint));
+    }
+
+    #[test]
+    fn optional_config_fields_remain_optional() {
+        let config: Config = de::from_str("endpoint = \"https://example.com\"\n").unwrap();
+        assert_eq!(config.user_secret, None);
+        assert_eq!(config.endpoint.as_deref(), Some("https://example.com"));
+    }
+}
