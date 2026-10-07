@@ -23,7 +23,7 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Rust Setup
         id: setup
@@ -43,9 +43,27 @@ jobs:
             sudo apt-get install -qq -y gcc-aarch64-linux-gnu
           fi
 
+      - name: Set up Python for PR validation
+        if: github.event_name == 'pull_request' && matrix.target == 'x86_64-unknown-linux-gnu'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'scripts/requirements.txt'
+
+      - name: Validate release script syntax without running scripts
+        if: github.event_name == 'pull_request' && matrix.target == 'x86_64-unknown-linux-gnu'
+        env:
+          PYTHONPYCACHEPREFIX: ${{ runner.temp }}/znotify-python-cache
+        run: python -m py_compile scripts/version.py scripts/winget.py
+
+      - name: Test CLI on native host
+        if: startsWith(matrix.target, 'x86_64-')
+        run: cargo test --locked --bins
+
       - name: Build binary
         run: |
-          cargo build --release --bins --target ${{ matrix.target }}
+          cargo build --locked --release --bins --target ${{ matrix.target }}
           cargo deb --target ${{ matrix.target }}
 
 
@@ -55,7 +73,7 @@ jobs:
           mv -f target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.target }}
           path: |
@@ -71,7 +89,7 @@ jobs:
           - aarch64-apple-darwin
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Rust Setup
         id: setup
@@ -86,9 +104,13 @@ jobs:
         run: |
           rustup target add ${{ matrix.target }}
 
+      - name: Test CLI on native host
+        if: startsWith(matrix.target, 'x86_64-')
+        run: cargo test --locked --bins
+
       - name: Build binary
         run: |
-          cargo build --release --bins --target ${{ matrix.target }}
+          cargo build --locked --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
         shell: bash
@@ -96,7 +118,7 @@ jobs:
           mv -f target/${{ matrix.target }}/release/znotify target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}
@@ -111,7 +133,7 @@ jobs:
           - aarch64-pc-windows-msvc
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Rust Setup
         id: setup
@@ -126,9 +148,13 @@ jobs:
         run: |
           rustup target add ${{ matrix.target }}
 
+      - name: Test CLI on native host
+        if: startsWith(matrix.target, 'x86_64-')
+        run: cargo test --locked --bins
+
       - name: Build binary
         run: |
-          cargo build --release --bins --target ${{ matrix.target }}
+          cargo build --locked --release --bins --target ${{ matrix.target }}
 
       - name: Rename binary
         shell: bash
@@ -136,7 +162,7 @@ jobs:
           mv -f target/${{ matrix.target }}/release/znotify.exe target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
@@ -188,11 +214,11 @@ jobs:
     needs: [ build_binary_linux, build_binary_macos, build_binary_windows ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: 'master'
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
           cache: 'pip'
