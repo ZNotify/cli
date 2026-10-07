@@ -104,6 +104,7 @@ jobs:
   build_binary_windows:
     runs-on: windows-latest
     strategy:
+      fail-fast: false
       matrix:
         target:
           - x86_64-pc-windows-msvc
@@ -139,6 +140,25 @@ jobs:
         with:
           name: ${{ matrix.target }}
           path: target/${{ matrix.target }}/release/znotify-${{ matrix.target }}.exe
+
+  verify_artifacts:
+    if: github.event_name == 'pull_request'
+    needs: [ build_binary_linux, build_binary_macos, build_binary_windows ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download PR artifacts
+        uses: actions/download-artifact@v7.0.0
+        with:
+          path: binary
+      - name: Verify platform binaries
+        shell: bash
+        run: |
+          for target in x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin; do
+            test -s "binary/$target/znotify-$target"
+          done
+          for target in x86_64-pc-windows-msvc aarch64-pc-windows-msvc; do
+            test -s "binary/$target/znotify-$target.exe"
+          done
 
   release_nightly:
     if: github.event_name == 'push'
