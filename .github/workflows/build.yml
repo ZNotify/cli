@@ -153,7 +153,10 @@ jobs:
       - name: Verify platform binaries
         shell: bash
         run: |
-          for target in x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu x86_64-apple-darwin aarch64-apple-darwin; do
+          for target in x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu; do
+            test -s "binary/$target/release/znotify-$target"
+          done
+          for target in x86_64-apple-darwin aarch64-apple-darwin; do
             test -s "binary/$target/znotify-$target"
           done
           for target in x86_64-pc-windows-msvc aarch64-pc-windows-msvc; do
